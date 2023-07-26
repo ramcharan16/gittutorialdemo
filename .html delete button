@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Call</title>
+    <style>
+        body {
+            background-image: url(rc.png);
+        }
+    </style>
+    <!-- Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title text-center">Book a Call</h2>
+                        <p class="card-text text-center">Book a call slot, and our representative will call you within 1 hour of the selected time.</p>
+                        <form id="callForm"> <!-- Add an id to the form element -->
+                            <div class="form-group">
+                                <label for="name">Name:</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number:</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Time for Call:</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="date" class="form-control" id="callDate" name="callDate" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="time" class="form-control" id="callTime" name="callTime" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success btn-block">Get a Call</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h2 class="card-title text-center">Contacted People</h2>
+                        <ul id="contactList" class="list-group">
+                            <!-- Contact list items will be added here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and jQuery scripts (optional, but some Bootstrap features require them) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // JavaScript code to handle form submission
+        const callForm = document.getElementById('callForm'); // Get the form element by its id
+
+        callForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            // Get the form field values
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const callDate = document.getElementById('callDate').value;
+            const callTime = document.getElementById('callTime').value;
+
+            // Get existing user details from local storage or initialize an empty array
+            const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
+
+            // Add the new user's details to the existing users array
+            const newUser = {
+                name,
+                phone,
+                email,
+                callDate,
+                callTime
+            };
+            existingUsers.push(newUser);
+
+            // Store the updated users array in local storage
+            localStorage.setItem('users', JSON.stringify(existingUsers));
+
+            // Log the form data to the console
+            console.log('User Details:', newUser);
+
+            // Optionally, you can clear the form after submission
+            callForm.reset();
+
+            // Refresh the contact list in the UI
+            updateContactList();
+        });
+
+        // Function to update the contact list in the UI
+        function updateContactList() {
+            const contactListElement = document.getElementById('contactList');
+
+            // Get the existing users from local storage
+            const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
+
+            // Clear the contact list
+            contactListElement.innerHTML = '';
+
+            // Add each user to the contact list
+            existingUsers.forEach(user => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.textContent = `Name: ${user.name}, Phone: ${user.phone}, Email: ${user.email}, Call Date: ${user.callDate}, Call Time: ${user.callTime}`;
+
+                // Create a delete button for each user
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'btn btn-danger btn-sm float-right delete';
+                deleteButton.textContent = 'Delete';
+                deleteButton.addEventListener('click', function() {
+                    // Remove the user from the existing users array
+                    const index = existingUsers.indexOf(user);
+                    if (index !== -1) {
+                        existingUsers.splice(index, 1);
+                    }
+
+                    // Update the users array in local storage
+                    localStorage.setItem('users', JSON.stringify(existingUsers));
+
+                    // Refresh the contact list in the UI
+                    updateContactList();
+                });
+
+                // Append the delete button to the list item
+                listItem.appendChild(deleteButton);
+
+                // Append the list item to the contact list
+                contactListElement.appendChild(listItem);
+            });
+        }
+
+        // Initial update of the contact list on page load
+        updateContactList();
+    </script>
+</body>
+</html>
