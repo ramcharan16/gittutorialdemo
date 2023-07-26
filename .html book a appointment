@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Call</title>
+    <style>
+        body {
+            background-image: url(rc.png);
+        }
+    </style>
+    <!-- Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title text-center">Book a Call</h2>
+                        <p class="card-text text-center">Book a call slot, and our representative will call you within 1 hour of the selected time.</p>
+                        <form id="callForm"> <!-- Add an id to the form element -->
+                            <div class="form-group">
+                                <label for="name">Name:</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number:</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Time for Call:</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="date" class="form-control" id="callDate" name="callDate" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="time" class="form-control" id="callTime" name="callTime" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success btn-block">Get a Call</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and jQuery scripts (optional, but some Bootstrap features require them) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // JavaScript code to handle form submission
+        const callForm = document.getElementById('callForm'); // Get the form element by its id
+
+        callForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            // Get the form field values
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const callDate = document.getElementById('callDate').value;
+            const callTime = document.getElementById('callTime').value;
+
+            // Store the user details in local storage
+            const userDetails = {
+                name,
+                phone,
+                email,
+                callDate,
+                callTime
+            };
+            localStorage.setItem('userDetails', JSON.stringify(userDetails));
+
+            // Log the form data to the console
+            console.log('User Details:', userDetails);
+
+            // Optionally, you can clear the form after submission
+            callForm.reset();
+        });
+    </script>
+</body>
+</html>
+
+// Retrieve user details from Local Storage
+const storedUserDetails = localStorage.getItem('userDetails');
+const userDetailsObject = JSON.parse(storedUserDetails);
+
+console.log(userDetailsObject.name); // Output: The stored user's name
+console.log(userDetailsObject.phone); // Output: The stored user's phone number
+console.log(userDetailsObject.email); // Output: The stored user's email address
+console.log(userDetailsObject.callDate); // Output: The stored user's call date
+console.log(userDetailsObject.callTime); // Output: The stored user's call time
+
